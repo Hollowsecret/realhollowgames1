@@ -12,3 +12,4 @@
 - Friday Night Funkin being blocked
 - Indie cross being bugged
 - bug that wouldn't let you exit game without 404
+- fixed fnf 404
