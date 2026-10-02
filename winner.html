@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winner</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #ffffff;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Initial styling for the text elements */
+        #text-stage {
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            transition: all 0.5s ease;
+        }
+
+        .winner-build-up {
+            animation: winner-glow 5s linear forwards, shake var(--shake-speed, 0.4s) infinite;
+        }
+
+        /* Retro Bowl text style styling */
+        .retro-title {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-size: 6rem !important;
+            color: #ff3366;
+            text-shadow: 0 0 12px #ff3366, 0 0 28px #33ccff;
+            animation: shake 0.4s infinite;
+        }
+
+        /* GIF container setup */
+        #gif-container {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        #gif-container img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes winner-glow {
+            0% { text-shadow: 0 0 0 rgba(51, 204, 255, 0); }
+            10% { text-shadow: 0 0 3px rgba(51, 204, 255, 0.25); }
+            20% { text-shadow: 0 0 5px rgba(51, 204, 255, 0.35); }
+            30% { text-shadow: 0 0 7px rgba(51, 204, 255, 0.45); }
+            40% { text-shadow: 0 0 9px rgba(51, 204, 255, 0.55); }
+            50% { text-shadow: 0 0 14px rgba(51, 204, 255, 0.65); }
+            60% { text-shadow: 0 0 18px rgba(51, 204, 255, 0.75); }
+            70% { text-shadow: 0 0 22px rgba(51, 204, 255, 0.85); }
+            80% { text-shadow: 0 0 27px rgba(51, 204, 255, 0.9); }
+            90% { text-shadow: 0 0 32px rgba(51, 204, 255, 0.95); }
+            100% { text-shadow: 0 0 38px rgba(51, 204, 255, 1); }
+        }
+
+        /* Quick text animation for the Retro Bowl reveal */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-2px, -3px) rotate(-1.5deg); }
+            20% { transform: translate(-4px, 0px) rotate(1.5deg); }
+            30% { transform: translate(0px, 3px) rotate(0deg); }
+            40% { transform: translate(2px, -2px) rotate(1.5deg); }
+            50% { transform: translate(-2px, 3px) rotate(-1.5deg); }
+            60% { transform: translate(-4px, 2px) rotate(0deg); }
+            70% { transform: translate(3px, 2px) rotate(-1.5deg); }
+            80% { transform: translate(-2px, -2px) rotate(1.5deg); }
+            90% { transform: translate(3px, 3px) rotate(0deg); }
+            100% { transform: translate(2px, -3px) rotate(-1.5deg); }
+        }
+
+        /* Start button required due to browser audio restrictions */
+        #start-btn {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            background-color: #33ccff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        #start-btn:hover {
+            background-color: #ff3366;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Button (Browsers block sound from playing automatically without a click) -->
+    <button id="start-btn" onclick="startSequence()">see winner</button>
+
+    <!-- Main display text -->
+    <h1 id="text-stage" style="display: none;">THE WINNER IS...</h1>
+
+    <!-- GIF Container -->
+    <div id="gif-container" id="retro-gif-box">
+        <!-- REPLACE "your_gif_here.gif" WITH YOUR ACTUAL GIF FILE NAME -->
+        <img src="party.gif" alt="Retro Bowl GIF">
+    </div>
+
+    <!-- Audio Elements -->
+    <!-- REPLACE "first_sound.mp3" WITH YOUR FIRST AUDIO FILE NAME -->
+    <audio id="sound1" src="before.mp3"></audio>
+    
+    <!-- REPLACE "second_sound.mp3" WITH YOUR SECOND AUDIO FILE NAME -->
+    <audio id="sound2" src="after.mp3"></audio>
+
+    <script>
+        function startSequence() {
+            // Hide the start button
+            document.getElementById('start-btn').style.display = 'none';
+            
+            // Show the first text and play the first sound
+            const textStage = document.getElementById('text-stage');
+            const sound1 = document.getElementById('sound1');
+            const sound2 = document.getElementById('sound2');
+            const gifContainer = document.getElementById('gif-container');
+            
+            textStage.style.display = 'block';
+            textStage.classList.add('winner-build-up');
+            sound1.play().catch(e => console.log("Audio playback error:", e));
+
+            // Speed up the existing shake during the final second.
+            setTimeout(() => {
+                textStage.style.setProperty('--shake-speed', '0.1s');
+            }, 4000);
+
+            // Reveal Retro Bowl after the five-second build-up.
+            setTimeout(() => {
+                // Change text to RETRO BOWL and apply styles
+                textStage.textContent = "RETRO BOWL";
+                textStage.style.removeProperty('--shake-speed');
+                textStage.classList.remove('winner-build-up');
+                textStage.classList.add('retro-title');
+                
+                // Show the GIF
+                gifContainer.style.display = 'block';
+                
+                // Play the second sound
+                sound1.pause();
+                sound2.play().catch(e => console.log("Audio playback error:", e));
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
