@@ -175,9 +175,9 @@ transform: translateX(-50%) translateY(-50%);
 
 <label>Open Gam Mode:</label>
 <select onchange='changeGamMode(this)' id='gamMode'>
-<option value="gam">In new tab</option>
-<option value="embed">On this tab</option>
 <option value="blank">In an about:blank tab</option>
+<option value="embed">In this tab</option>
+<option value="gam">In new tab</option>
 <option value="direct">Replace this tab</option>
 <option value="raw">Raw link in new tab</option>
 </select>
@@ -199,19 +199,20 @@ transform: translateX(-50%) translateY(-50%);
 
 <a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
 <a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
+<a href="100th.html" class="tile"><img class="img" src="img/100th.png"><p class="name">100th game poll finale</p></a>
 
 </div>
 
 <div id="searcher">
-<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></div>
+<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1);" viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 13.707l4.387 4.386a1 1 0 001.414-1.414l-4.386-4.387A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg></div>
 </div>
 
 <script>
 try {
-  getStoredJSON("gams", {key: "gamMode"});
+ getStoredJSON("gams", {key: "gamMode"});
 } catch(e) {
-  localStorage.removeItem("gams");
-  storeJSON("gams", {key: "gamMode", value: "gam"})
+ localStorage.removeItem("gams");
+ storeJSON("gams", {key: "gamMode", value: "gam"})
 }
 
 const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
@@ -248,7 +249,7 @@ document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
 
 function searchbar(elm) {
 elm.remove()
-l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; transition: width 0.3s ease-in-out; padding: 5px; border-radius: 3px; border: none;"/>`;
+l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;">`;
 l('searchQuery').focus();
 l('searchQuery').style.width = '120px';
 }
@@ -257,7 +258,7 @@ function searchicon(elm) {
 elm.style.width = '20px';
 setTimeout(function(){
 elm.remove();
-l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></div>`;
+l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1);" viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 13.707l4.387 4.386a1 1 0 001.414-1.414l-4.386-4.387A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg></div>`;
 }, 500);
 }
 
@@ -373,7 +374,7 @@ var elm = document.createElement(tag);
 if (prps) {
 var props = Object.getOwnPropertyNames(prps);
 for (i=0;i<props.length;i++) {
-elm.setAttribute(props[i], prps[i]);
+elm.setAttribute(props[i], prps[props[i]]);
 }
 }
 
@@ -412,7 +413,8 @@ var gamsList = [
 {name: "Baldis Basics"},
 {name: "Minecraft"},
 {name: "Stacktris"},
-{name: "Case Clicker 2"}, 
+{name: "caseclicker1", href: "g/g/cc2/index.html"},
+{name: "BLOODMONEY!", href: "g/g/bloodmoney/index.html"},
 
 {title: "Five Nights At Freddys", type: "section"},
 {name: "Five Nights At Freddys"},
@@ -426,6 +428,7 @@ var gamsList = [
 {name: "Marios Madness"},
 {name: "Mr Meowzz FNF Engine"},
 {name: "Friday Night Funkin"},
+{name: "Indie Cross"},
 
 {title: "Unity", type: "section"},
 {name: "Slope"},
@@ -444,6 +447,7 @@ var gamsList = [
 {name: "Ai Creatures", href: "g/g/aicreatures/index.html"},
 {name: "Grey Box Testing", href: "g/g/greybox/index.html"},
 {name: "Hollow Knight"},
+{name: "Buckshot Roulette"},
 
 {title: "Scratch", type: "section"},
 {name: "israelclicker"},
@@ -454,6 +458,7 @@ var gamsList = [
 {name: "Just One Boss"},
 {name: "Super Mario RPG"},
 {name: "Super Mario 63"},
+{name: "Sonic Mania", href: "g/g/sonicmania/RSDKv5.html"},
 
 {title: "Henry Stickmin Flash", type: "section"},
 {name: "Breaking The Bank"},
@@ -638,7 +643,7 @@ document.title = 'about:blank';
 if (icon) {
 setFavicon(icon)
 }else{
-setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efg0oR+1kqKqFOZBTwDMyVEj/rIAVVFIc1KJGcSqKmksLoRNJU');
+setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efg0oR+1[...]
 }
 }
 
