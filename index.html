@@ -1,170 +1,716 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winner</title>
-    <style>
-        body {
-            background-color: #111;
-            color: #ffffff;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            text-align: center;
-        }
+<title>Clever-Portal</title>
+<link type="image/x-icon" rel="icon" href="img/gams-g.png">
+<link rel="stylesheet" href="assets/new.min.css">
+<style>
+html, body {
+transition: .5s;
+}
 
-        /* Initial styling for the text elements */
-        #text-stage {
-            font-size: 3.5rem;
-            letter-spacing: 2px;
-            transition: all 0.5s ease;
-        }
+/*Override max width of body set in new.css*/
+body {
+ max-width: 1000px;
+}
 
-        .winner-build-up {
-            animation: winner-glow 5s linear forwards, shake var(--shake-speed, 0.4s) infinite;
-        }
+@font-face {
+font-family: 'facon';
+src: url('assets/facon.ttf') format('truetype');
+}
 
-        /* Retro Bowl text style styling */
-        .retro-title {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            font-size: 6rem !important;
-            color: #ff3366;
-            text-shadow: 0 0 12px #ff3366, 0 0 28px #33ccff;
-            animation: shake 0.4s infinite;
-        }
+.switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
 
-        /* GIF container setup */
-        #gif-container {
-            display: none;
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-        }
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
 
-        #gif-container img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+-webkit-transition: .4s;
+transition: .4s;
+}
 
-        @keyframes winner-glow {
-            0% { text-shadow: 0 0 0 rgba(51, 204, 255, 0); }
-            10% { text-shadow: 0 0 3px rgba(51, 204, 255, 0.25); }
-            20% { text-shadow: 0 0 5px rgba(51, 204, 255, 0.35); }
-            30% { text-shadow: 0 0 7px rgba(51, 204, 255, 0.45); }
-            40% { text-shadow: 0 0 9px rgba(51, 204, 255, 0.55); }
-            50% { text-shadow: 0 0 14px rgba(51, 204, 255, 0.65); }
-            60% { text-shadow: 0 0 18px rgba(51, 204, 255, 0.75); }
-            70% { text-shadow: 0 0 22px rgba(51, 204, 255, 0.85); }
-            80% { text-shadow: 0 0 27px rgba(51, 204, 255, 0.9); }
-            90% { text-shadow: 0 0 32px rgba(51, 204, 255, 0.95); }
-            100% { text-shadow: 0 0 38px rgba(51, 204, 255, 1); }
-        }
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
 
-        /* Quick text animation for the Retro Bowl reveal */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-2px, -3px) rotate(-1.5deg); }
-            20% { transform: translate(-4px, 0px) rotate(1.5deg); }
-            30% { transform: translate(0px, 3px) rotate(0deg); }
-            40% { transform: translate(2px, -2px) rotate(1.5deg); }
-            50% { transform: translate(-2px, 3px) rotate(-1.5deg); }
-            60% { transform: translate(-4px, 2px) rotate(0deg); }
-            70% { transform: translate(3px, 2px) rotate(-1.5deg); }
-            80% { transform: translate(-2px, -2px) rotate(1.5deg); }
-            90% { transform: translate(3px, 3px) rotate(0deg); }
-            100% { transform: translate(2px, -3px) rotate(-1.5deg); }
-        }
+input:checked + .slider {
+background-color: #2196F3;
+}
 
-        /* Start button required due to browser audio restrictions */
-        #start-btn {
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            background-color: #33ccff;
-            color: #000;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-        #start-btn:hover {
-            background-color: #ff3366;
-            color: #fff;
-        }
-    </style>
+input:focus + .slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+
+.title {
+font-size: 50pt;
+font-family: 'facon', sans-serif;
+letter-spacing: 3pt;
+}
+
+.tile {
+color: var(--nc-tx-1);
+height: auto;
+width: auto;
+border-radius: 10px;
+border: 1px solid var(--nc-tx-1);
+text-align: center;
+position: relative;
+float: left;
+margin: 20px;
+}
+
+.tile img {
+width: 200px;
+height: 200px;
+border-radius: 10px;
+}
+
+.tile:hover {
+font-weight: bold;
+cursor: pointer;
+background: var(--nc-bg-3);
+}
+
+.shade {
+opacity: 0.7;
+background-color: var(--nc-bg-3);
+position: fixed;
+width: 100%;
+height: 100vh;
+top: 0px;
+left: 0px;
+z-index: 100;
+display: block;
+}
+
+.cont {
+opacity: 1;
+color: var(--nc-tx-1);
+background-color: var(--nc-bg-3);
+z-index: 1000;
+width: calc(100vw - 70px);
+height: calc(100vh - 70px);
+border-radius: 10px;
+text-align: center;
+position: fixed;
+left: 50%;
+top: 50%;
+transform: translateX(-50%) translateY(-50%);
+}
+
+.loader{
+position: fixed;
+border:16px solid var(--nc-bg-3);
+border-radius:50%;
+border-top:16px solid var(--nc-lk-2);
+width:120px;
+height:120px;
+top: 0;
+right: 0;
+margin: 10px;
+animation:spin 2s linear infinite;
+transform: translateX(-50%) translateY(-50%);
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+</style>
+<script src='i.js'></script>
 </head>
-<body>
 
-    <!-- Start Button (Browsers block sound from playing automatically without a click) -->
-    <button id="start-btn" onclick="startSequence()">see winner</button>
+<body onload="setSavedTheme()">
+<header>
+<h1 class="title">HollowGames</h1>
+</header>
 
-    <!-- Main display text -->
-    <h1 id="text-stage" style="display: none;">THE WINNER IS...</h1>
+<label>Dark Mode:</label>
+<label class="switch">
+<input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+<span class="slider round"></span>
+</label>
 
-    <!-- GIF Container -->
-    <div id="gif-container" id="retro-gif-box">
-        <!-- REPLACE "your_gif_here.gif" WITH YOUR ACTUAL GIF FILE NAME -->
-        <img src="party.gif" alt="Retro Bowl GIF">
-    </div>
+<br><br>
 
-    <!-- Audio Elements -->
-    <!-- REPLACE "first_sound.mp3" WITH YOUR FIRST AUDIO FILE NAME -->
-    <audio id="sound1" src="before.mp3"></audio>
-    
-    <!-- REPLACE "second_sound.mp3" WITH YOUR SECOND AUDIO FILE NAME -->
-    <audio id="sound2" src="after.mp3"></audio>
+<p>Total Games: <span id="totalGames">Loading...</span></p>
 
-    <script>
-        function startSequence() {
-            // Hide the start button
-            document.getElementById('start-btn').style.display = 'none';
-            
-            // Show the first text and play the first sound
-            const textStage = document.getElementById('text-stage');
-            const sound1 = document.getElementById('sound1');
-            const sound2 = document.getElementById('sound2');
-            const gifContainer = document.getElementById('gif-container');
-            
-            textStage.style.display = 'block';
-            textStage.classList.add('winner-build-up');
-            sound1.play().catch(e => console.log("Audio playback error:", e));
+<label>Open Gam Mode:</label>
+<select onchange='changeGamMode(this)' id='gamMode'>
+<option value="gam">In new tab</option>
+<option value="embed">On this tab</option>
+<option value="blank">In an about:blank tab</option>
+<option value="direct">Replace this tab</option>
+<option value="raw">Raw link in new tab</option>
+</select>
 
-            // Speed up the existing shake during the final second.
-            setTimeout(() => {
-                textStage.style.setProperty('--shake-speed', '0.1s');
-            }, 4000);
+<div class="overlay" id="overlay" style="display:none">
+<div class="shade" id="shade"></div>
+<div class="cont" id="cont">
+<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">
+<button>🡽</button>
+</a>
+<iframe style="width:100%;height:100%;border-radius:10px" frameborder=0 id="mainGam"></iframe>
 
-            // Reveal Retro Bowl after the five-second build-up.
-            setTimeout(() => {
-                // Change text to RETRO BOWL and apply styles
-                textStage.textContent = "RETRO BOWL";
-                textStage.style.removeProperty('--shake-speed');
-                textStage.classList.remove('winner-build-up');
-                textStage.classList.add('retro-title');
-                
-                // Show the GIF
-                gifContainer.style.display = 'block';
-                
-                // Play the second sound
-                sound1.pause();
-                sound2.play().catch(e => console.log("Audio playback error:", e));
-            }, 5000);
-        }
-    </script>
+<div class='loader' id='loader'></div>
+</div>
+</div>
+
+
+<div id="contain">
+
+<a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
+<a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
+
+</div>
+
+<div id="searcher">
+<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></div>
+</div>
+
+<script>
+try {
+  getStoredJSON("gams", {key: "gamMode"});
+} catch(e) {
+  localStorage.removeItem("gams");
+  storeJSON("gams", {key: "gamMode", value: "gam"})
+}
+
+const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+function l(e) {
+return document.getElementById(e);
+}
+
+function setLight() {
+document.documentElement.style.setProperty('--nc-tx-1', "#000000");
+document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
+document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-bg-2', "#F6F8FA");
+document.documentElement.style.setProperty('--nc-bg-3', "#E5E7EB");
+document.documentElement.style.setProperty('--nc-lk-1', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-2', "#0366D6");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#79FFE1");
+document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
+}
+
+function setDark() {
+document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
+document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
+document.documentElement.style.setProperty('--nc-bg-1', "#000000");
+document.documentElement.style.setProperty('--nc-bg-2', "#111111");
+document.documentElement.style.setProperty('--nc-bg-3', "#222222");
+document.documentElement.style.setProperty('--nc-lk-1', "#3291FF");
+document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
+document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
+}
+
+function searchbar(elm) {
+elm.remove()
+l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; transition: width 0.3s ease-in-out; padding: 5px; border-radius: 3px; border: none;"/>`;
+l('searchQuery').focus();
+l('searchQuery').style.width = '120px';
+}
+
+function searchicon(elm) {
+elm.style.width = '20px';
+setTimeout(function(){
+elm.remove();
+l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></div>`;
+}, 500);
+}
+
+function getStoredJSON(key, data) {
+if (data && data.key && (localStorage[key] != 'null')) {
+var inStore = JSON.parse(localStorage[key]);
+if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+return inStore[data.key];
+}
+}
+if (localStorage[key] && !data) {
+return JSON.parse(localStorage[key]);
+}
+return null;
+}
+
+function storeJSON(key, data) {
+if (localStorage[key]) {
+var inStore = JSON.parse(localStorage[key]) || {};
+inStore[data.key] = data.value;
+localStorage[key] = JSON.stringify(inStore);
+}else{
+var inStore = {};
+inStore[data.key] = data.value;
+localStorage[key] = JSON.stringify(inStore);
+}
+
+return localStorage[key];
+}
+
+function changeTheme(input) {
+var wantsDarkMode = (input.checked);
+if (wantsDarkMode) {
+setDark();
+storeJSON('gams', {
+key: 'theme',
+value: 'dark'
+})
+} else {
+setLight();
+storeJSON('gams', {
+key: 'theme',
+value: 'light'
+})
+}
+}
+
+function changeGamMode(input) {
+storeJSON('gams', {
+key: 'gamMode',
+value: input.value
+});
+}
+
+function setSavedTheme() {
+//Set Gam Mode
+if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
+//Set gam Mode
+
+if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
+var theme = getStoredJSON('gams', {key: 'theme'});
+if (theme == 'light') {
+//eww you monster
+setLight();
+l('darkModeInput').checked = false;
+} else if (theme == 'dark') {
+setDark();
+l('darkModeInput').checked = true;
+}
+} else {
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+var newColorScheme = event.matches ? "dark" : "light";
+if (newColorScheme == 'dark') {
+l('darkModeInput').checked = true
+}
+if (newColorScheme == 'light') {
+l('darkModeInput').checked = false
+}
+});
+
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+l('darkModeInput').checked = true;
+} else {
+l('darkModeInput').checked = false;
+}
+}
+}
+
+l('shade').onclick = function() {
+l('overlay').style.display='none';
+l("mainGam").src = '';
+l("newWin").href = '';
+}
+
+function startSearch() {
+var input, filter, ul, li, a, i;
+input = l("searchQuery");
+filter = input.value.toUpperCase();
+ul = document.body;
+li = ul.getElementsByClassName("tile");
+for (i = 0; i < li.length; i++) {
+if (li[i].textContent.toUpperCase().indexOf(filter) > -1) {
+li[i].style.display = "";
+} else {
+li[i].style.display = "none";
+}
+}
+}
+
+function createElement(tag, prps) {
+var elm = document.createElement(tag);
+if (prps) {
+var props = Object.getOwnPropertyNames(prps);
+for (i=0;i<props.length;i++) {
+elm.setAttribute(props[i], prps[i]);
+}
+}
+
+return elm;
+}
+
+var totalGames = 0;
+
+var gamsList = [
+{title: "Basic", type: "section"},
+{name: "Stickman Hook"},
+{name: "Drive Mad", href: "g/g/drivemad/drivemad.html"},
+{name: "2048"},
+{name: "Cookie Clicker", href: "g/g/cookie/index.html"},
+{name: "Cube Field", href: "g/g/cubefield/index.html"},
+{name: "DogeMiner", href: "g/g/dogeminer/index.html"},
+{name: "GunSpin", href: "g/g/gunspin/index.html"}, 
+{name: "Spacebar Clicker"},
+{name: "Offline Paradise"},
+{name: "Sand Game"},
+{name: "Agario Lite"},
+{name: "Evil Glitch"},
+{name: "Its Raining Boxes"},
+{name: "T Rex"},
+{name: "Stack"},
+{name: "Rolling Forests"},
+{name: "Radius Raid"},
+{name: "Mountain Maze"},
+{name: "Fluid Simulator"},
+{name: "Edge Not Found"},
+{name: "Ninja vs EVILCORP"},
+{name: "Geometry Dash"},
+{name: "Wordle"},
+{name: "Paper IO 2"},
+{name: "Gladihoppers"},
+{name: "Baldis Basics"},
+{name: "Minecraft"},
+{name: "Stacktris"},
+{name: "Case Clicker 2"}, 
+
+{title: "Five Nights At Freddys", type: "section"},
+{name: "Five Nights At Freddys"},
+{name: "Five Nights At Freddys2"},
+
+{title: "Friday Night Funkin", type: "section"},
+{name: "Vs Sonic Exe", href: "g/sonicexe.html"},
+{name: "Vs Imposter V3"},
+{name: "Vs Nonsense"},
+{name: "VS Camellia"},
+{name: "Marios Madness"},
+{name: "Mr Meowzz FNF Engine"},
+{name: "Friday Night Funkin"},
+
+{title: "Unity", type: "section"},
+{name: "Slope"},
+{name: "Slope 3"},    
+{name: "Burrito Bison", href: "g/g/burritobison/burritobison.html"},
+{name: "Tube Jumpers"},
+{name: "Hole IO"},
+{name: "Madalin Stunt Cars", href: "g/g/madalinstuntcars/madalinstuntcars.html"},
+{name: "Glass City", href: "g/g/glasscity/glasscity.html"},
+{name: "Tunnel Rush", href: "g/g/tunnelrush/tunnelrush.html"},
+{name: "Tanuki Sunset", href: "g/g/tanukisunset/tanukisunset.html"},
+{name: "A Dance of Fire and Ice", href: "g/g/fireice/index.html"},
+{name: "Game Inside a Game", href: "g/g/gameinsideagame/index.html"},
+{name: "Cell Machine", href: "g/g/cellmachine/index.html"},
+{name: "Slope 2", href: "g/g/slope2/index.html"},
+{name: "Ai Creatures", href: "g/g/aicreatures/index.html"},
+{name: "Grey Box Testing", href: "g/g/greybox/index.html"},
+{name: "Hollow Knight"},
+
+{title: "Scratch", type: "section"},
+{name: "israelclicker"},
+
+{title: "Retrogaming", type: "section"},
+{name: "Super Mario 64"},
+{name: "Celeste"},
+{name: "Just One Boss"},
+{name: "Super Mario RPG"},
+{name: "Super Mario 63"},
+
+{title: "Henry Stickmin Flash", type: "section"},
+{name: "Breaking The Bank"},
+{name: "Escaping The Prison"},
+{name: "Stealing The Diamond"},
+{name: "Infiltrating The Airship"},
+{name: "Fleeing The Complex"},
+
+{title: "Flash", type: "section"},
+{name: "Bloxorz"},
+{name: "Tetris"},
+{name: "Flood Runner 4"},
+{name: "Raft Wars"},
+{name: "Raft Wars 2"},
+{name: "Worlds Hardest Game"},
+{name: "The Impossible Quiz"},
+{name: "Learn To Fly Idle"},
+{name: "Learn To Fly 1"},
+{name: "Learn To Fly 2"},
+{name: "Learn To Fly 3"},
+{name: "Bloons Tower Defense 1"},
+{name: "Bloons Tower Defense 2"},
+{name: "Bloons Tower Defense 5"},
+{name: "Cat Ninja"},
+{name: "Pacman"},
+{name: "1 on 1 Soccer"},
+{name: "QWOP"},
+{name: "Use Boxmen"},
+{name: "40x Escape"},
+{name: "Stickman Life"},
+{name: "Duck Life 1"},
+{name: "Duck Life 2"},
+{name: "Duck Life 3"},
+{name: "Duck Life 4"},
+{name: "Duck Life 5"},
+
+{title: "Proxy", type: "section"},
+{name: "Gust", href: "g/g/gust/index.html"},
+
+{title: "Tools", type: "section"},
+{name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
+{name: "Code Editor", type: "raw"},
+{name: "Web Retro"},
+];
+
+var container = createElement('div', {
+id: 'container'
+})
+
+var currentSection = undefined;
+for (j = 0; j < gamsList.length; j++){
+
+if (gamsList[j].title) {currentSection = gamsList[j].title}
+
+if(gamsList[j].name){
+totalGames += 1;
+var tile = createElement('div', {
+class : 'tile'
+});
+var imgName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+var imgSrc = (gamsList[j].img) || 'img/' + imgName + '.png';
+var img = createElement('img', {
+class : 'img',
+src : imgSrc
+});
+tile.appendChild(img);
+
+var p = createElement('p', {
+class : 'name'
+});
+p.innerHTML = gamsList[j].name;
+tile.appendChild(p);
+
+if (currentSection) {
+var section = createElement('span', {
+style: "display:none"
+});
+section.innerHTML = currentSection;
+tile.appendChild(section);
+}
+
+var modeX = createElement('span', {
+class: "modeX",
+style: "display:none"
+});
+modeX.innerHTML = gamsList[j].type;
+tile.appendChild(modeX);
+
+var aName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+var aHref = (gamsList[j].href) || 'g/' + imgName + '.html';
+var a = createElement('a', {
+class : 'href',
+href : aHref
+});
+tile.appendChild(a);
+container.appendChild(tile);
+}else if (gamsList[j].title){
+var title = createElement('h2', {
+style: "float:left;width:100%"
+});
+container.appendChild(createElement('br'));
+title.innerHTML = gamsList[j].title;
+container.appendChild(title);
+container.appendChild(createElement('br'));
+}
+}
+l('contain').appendChild(container);
+l('totalGames').innerText = totalGames;
+
+var mode = 'gam'; //embed, gam, blank, direct
+//Init
+var gams = document.getElementsByClassName("tile");
+for (i = 0; i < gams.length; i++){
+gams[i].onclick = function(e){
+var href = (this.getElementsByClassName("href")[0].href);
+var name = (this.getElementsByClassName("name")[0].innerText);
+var modeX = (this.getElementsByClassName("modeX")[0].innerText);
+var pic = (this.getElementsByClassName("img")[0].src);
+
+mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
+
+if (modeX == "raw") {mode = modeX}
+
+if (mode == 'raw') {
+window.open(href);
+}
+
+if (mode == 'direct') {
+window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+}
+
+if (mode == 'blank') {
+var w = window.open();
+var doc = w.document;
+
+var body = doc.body;
+body.style = "margin:0";
+var iframe = w.document.createElement('iframe');
+iframe.style = "width:100vw;height:100vh";
+iframe.setAttribute('frameborder', 0);
+iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+body.appendChild(iframe);
+
+var script = w.document.createElement('script');
+script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+function setFavicon(href) {
+var existFav = document.querySelectorAll('link[rel*="icon"]');
+existFav.forEach(function(favicon) {
+favicon.parentNode.removeChild(favicon);
+});
+
+var link = document.createElement('link');
+link.type = 'image/x-icon';
+link.rel = 'icon';
+link.href = href;
+document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+function getStoredJSON(key, data) {
+if (data && data.key && (localStorage[key] != 'null')) {
+var inStore = JSON.parse(localStorage[key]);
+if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+return inStore[data.key];
+}
+}
+if (localStorage[key] && !data) {
+return JSON.parse(localStorage[key]);
+}
+return null;
+}
+
+function applyDisguise() {
+var icon = getStoredJSON('gams', {key: 'icon'});
+var title = getStoredJSON('gams', {key: 'title'});
+if (title) {
+document.title = (title);
+}else{
+document.title = 'about:blank';
+}
+
+if (icon) {
+setFavicon(icon)
+}else{
+setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efg0oR+1kqKqFOZBTwDMyVEj/rIAVVFIc1KJGcSqKmksLoRNJU');
+}
+}
+
+applyDisguise();
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+`;
+doc.head.appendChild(script);
+}
+
+if (mode == 'gam') {
+window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
+}
+
+if (mode == 'embed') {
+l('overlay').style.display = 'block';
+l("mainGam").src = href;
+l("newWin").href = href;
+l("mainGam").focus();
+l("loader").style.display = 'block';
+l("mainGam").onload = function(){
+l("mainGam").focus();
+setTimeout(function(){
+l("loader").style.display = 'none';
+l("mainGam").focus();
+}, 100);
+}
+}
+
+}
+}
+//Init
+
+function setFavicon(href) {
+var existFav = document.querySelectorAll('link[rel*="icon"]');
+existFav.forEach(function(favicon) {
+favicon.parentNode.removeChild(favicon);
+});
+
+var link = document.createElement('link');
+link.type = 'image/x-icon';
+link.rel = 'icon';
+link.href = href;
+document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+const ogTitle = document.title;
+const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
+
+function applyDisguise() {
+var icon = getStoredJSON('gams', {key: 'icon'});
+var title = getStoredJSON('gams', {key: 'title'});
+if (title) {
+document.title = (title);
+}else{
+document.title = (ogTitle);
+}
+
+if (icon) {
+setFavicon(icon)
+}else{
+setFavicon(ogIcon)
+}
+}
+
+applyDisguise();
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+</script>
 </body>
 </html>
