@@ -106,12 +106,55 @@
             background-color: #ff3366;
             color: #fff;
         }
+
+        #back-btn {
+            position: fixed;
+            bottom: 24px;
+            z-index: 3;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            background-color: #33ccff;
+            color: #000;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease;
+        }
+        #back-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        #back-btn:hover {
+            background-color: #ff3366;
+            color: #fff;
+        }
+
+        #monday-note {
+            position: fixed;
+            bottom: 84px;
+            z-index: 3;
+            margin: 0;
+            color: #fff;
+            font-size: 1.1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease;
+        }
+        #monday-note.visible {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
 
     <!-- Start Button (Browsers block sound from playing automatically without a click) -->
     <button id="start-btn" onclick="startSequence()">see winner</button>
+    <button id="back-btn" onclick="window.location.href = 'index.html'">go back</button>
+    <p id="monday-note">being added monday</p>
 
     <!-- Main display text -->
     <h1 id="text-stage" style="display: none;">THE WINNER IS...</h1>
@@ -163,6 +206,10 @@
                 // Play the second sound
                 sound1.pause();
                 sound2.play().catch(e => console.log("Audio playback error:", e));
+
+                // Fade in the button after the winner reveal.
+                document.getElementById('back-btn').classList.add('visible');
+                document.getElementById('monday-note').classList.add('visible');
             }, 5000);
         }
     </script>
